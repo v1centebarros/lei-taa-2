@@ -8,7 +8,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 
-def process_data(spectogram_type="mfcc"):
+def process_data(spectogram_type="mfcc",ptdb=False):
+    logger.info(f"Processing data with {spectogram_type} and power_to_db={ptdb}")
     ap = AudioProcessor()
 
     sanitized_audio_data, _ = ap.sanitize_audio()
@@ -27,7 +28,7 @@ def process_data(spectogram_type="mfcc"):
 
     #Convert sanitized_audio_data to spectrogram
     logger.info("Converting to spectrogram")
-    sanitized_audio_data = [Audio(ap.spectogram(audio.sample,spec_func=spectogram_type),audio.label) for audio in sanitized_audio_data]
+    sanitized_audio_data = [Audio(ap.spectogram(audio.sample,spec_func=spectogram_type, power_to_db=ptdb),audio.label) for audio in sanitized_audio_data]
 
     #Split between train and test and cross validation
 
@@ -48,6 +49,8 @@ def process_data(spectogram_type="mfcc"):
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Process audio files")
-    argParser.add_argument("--spec", type=str, default="mfcc", help="Type of spectogram to use")
+    argParser.add_argument("--spec", type=str, default="mfcc", help="Type of spectogram to use", choices=["mfcc","melspectrogram","chroma_stft"])
+    argparse.add_argument("--ptdb", type=bool, default=False, help="Whether to use power to db or not")
     args = argParser.parse_args()
-    process_data(args.spec)
+    process_data(args.spec, args.ptdb)
+

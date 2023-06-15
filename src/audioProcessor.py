@@ -33,12 +33,15 @@ class AudioProcessor:
         self.spectograms_folder = spectograms_folder
         self.audio_files:list[Audio] = self.load_audio_files()
 
-    def spectogram(self, waveform, spec_func="melspectrogram", sr=8000):
+    def spectogram(self, waveform, spec_func="melspectrogram", sr=8000,power_to_db=False):
         # Convert to spectrogram
         logger.info(f"Converting to {spec_func} spectrogram")
         spec = spectogram_func[spec_func](y=waveform, sr=sr)
-        #! Esta linha baixa a accuracy do modelo em mfcc
-        # return librosa.power_to_db(spec, ref=np.max)
+        
+        if power_to_db:
+            #! Esta linha baixa a accuracy do modelo em mfcc
+            return librosa.power_to_db(spec, ref=np.max)
+        
         return spec
 
     # TODO: Refactor this method to handle different name

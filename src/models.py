@@ -28,7 +28,7 @@ def model_1(train_X):
             Dense(10, activation='softmax'),
         ]
     )
-    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"])
+    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
 
@@ -57,7 +57,7 @@ def model_2(train_X):
             Dense(10, activation='softmax'),
         ]
     )
-    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"])
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
 
@@ -78,7 +78,7 @@ def model_3(train_X):
         Dense(10),
     ]
     )
-    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"])
+    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
 
@@ -100,7 +100,7 @@ def model_4(train_X):
         Dense(10),
     ]
     )
-    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"])
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
 
@@ -122,6 +122,6 @@ def model_5(train_X):
         Dense(10),
     ]
     )
-    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"])
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model

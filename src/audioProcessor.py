@@ -37,7 +37,9 @@ class AudioProcessor:
         # Convert to spectrogram
         logger.info(f"Converting to {spec_func} spectrogram")
         spec = spectogram_func[spec_func](y=waveform, sr=sr)
-        return librosa.power_to_db(spec, ref=np.max)
+        #! Esta linha baixa a accuracy do modelo em mfcc
+        # return librosa.power_to_db(spec, ref=np.max)
+        return spec
 
     # TODO: Refactor this method to handle different name
     def plot_spectogram(self, spec):

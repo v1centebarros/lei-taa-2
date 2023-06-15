@@ -1,17 +1,14 @@
 import argparse
+import json
 import os
 import numpy as np
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
-from audioProcessor import AudioProcessor, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns
+import datetime
 
+from models import model_1,model_2,model_3,model_4, model_5
 
-from keras import Sequential, Input
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Resizing, BatchNormalization
-from keras.optimizers import Adam,RMSprop
-from keras.losses import SparseCategoricalCrossentropy
 
 
 def load_data(spectogram_type):
@@ -23,107 +20,6 @@ def load_data(spectogram_type):
     test_Y = np.array([int(file.split("_")[1]) for file in os.listdir(f"data/spectograms/{spectogram_type}/test")])
 
     return train_X, train_Y, cv_X, cv_Y, test_X, test_Y
-
-
-def model_1(train_X):
-
-    model = Sequential(
-        [
-            Input(shape=(*train_X[0].shape,1)),
-            Resizing(32, 32), 
-            Conv2D(32, 3, strides=2, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            Conv2D(64, 3, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            BatchNormalization(),
-            Conv2D(128, 3, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            BatchNormalization(),
-            Flatten(),
-            Dense(256, activation='relu'),
-            BatchNormalization(),
-            Dropout(0.5),
-            Dense(10, activation='softmax'),
-        ]
-    )
-    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-
-    return model
-
-
-def model_2(train_X):
-
-    model = Sequential(
-        [
-            Input(shape=(*train_X[0].shape,1)),
-            Resizing(32, 32), 
-            Conv2D(32, 3, strides=2, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            Conv2D(64, 3, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            BatchNormalization(),
-            Conv2D(128, 3, padding='same', activation='relu'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            BatchNormalization(),
-            Flatten(),
-            Dense(256, activation='relu'),
-            BatchNormalization(),
-            Dropout(0.5),
-            Dense(10, activation='softmax'),
-        ]
-    )
-    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-
-    return model
-
-def model_3(train_X):
-    model = Sequential(
-    [
-        Input(shape=(*train_X[0].shape,1)),
-        Resizing(32, 32), 
-        Conv2D(32, 3, activation='relu'),
-        MaxPooling2D(),
-        #Conv2D(64, 3, activation='relu'),
-        #MaxPooling2D(),
-        Conv2D(128, 3, activation='relu'),
-        MaxPooling2D(),
-        Dropout(0.5),
-        Flatten(),
-        Dense(128, activation='relu'),
-        Dense(10),
-    ]
-    )
-    model.compile(optimizer=RMSprop(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-
-    return model
-
-
-def model_4(train_X):
-    model = Sequential(
-    [
-        Input(shape=(*train_X[0].shape,1)),
-        Resizing(32, 32), 
-        Conv2D(32, 3, activation='relu'),
-        MaxPooling2D(),
-        #Conv2D(64, 3, activation='relu'),
-        #MaxPooling2D(),
-        Conv2D(128, 3, activation='relu'),
-        MaxPooling2D(),
-        Dropout(0.5),
-        Flatten(),
-        Dense(128, activation='relu'),
-        Dense(10),
-    ]
-    )
-    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-
-    return model
 
 
 def train_model(model, train_X, train_Y, cv_X, cv_Y):
@@ -159,7 +55,7 @@ def plot_confusion_matrix(true_categories, predicted_categories):
 
 
 
-def run_model(model, train_X, train_Y, cv_X, cv_Y, test_X, test_Y):
+def run_model(model, train_X, train_Y, cv_X, cv_Y, test_X, test_Y, plot=False, save=False, model_name="model_1"):
     history = train_model(model, train_X, train_Y, cv_X, cv_Y)
 
     test_loss, test_acc = model.evaluate(test_X, test_Y, verbose=2)
@@ -168,17 +64,21 @@ def run_model(model, train_X, train_Y, cv_X, cv_Y, test_X, test_Y):
 
     model.summary()
 
-    plot_accuracy_loss(history)
+    if plot:
+        plot_accuracy_loss(history)
+        # Predict the test data
+        y_pred = model.predict(test_X)
+        predicted_categories = np.argmax(y_pred, axis=1)
+        true_categories = test_Y
+        plot_confusion_matrix(true_categories, predicted_categories)
 
-    # Predict the test data
-    y_pred = model.predict(test_X)
-    predicted_categories = np.argmax(y_pred, axis=1)
-    true_categories = test_Y
+    if save:
+        save_model(model, model_name)
 
-    plot_confusion_matrix(true_categories, predicted_categories)
+    return test_loss, test_acc
 
 def save_model(model, model_name):
-    model.save(f"models/{model_name}.h5")
+    model.save(f"data/models/{model_name}.h5")
 
 
 
@@ -187,14 +87,36 @@ def run(spectogram_type="mfcc"):
 
     train_X, train_Y, cv_X, cv_Y, test_X, test_Y = load_data(spectogram_type)
 
-    run_model(model_4(train_X), train_X, train_Y, cv_X, cv_Y, test_X, test_Y)
+    models_to_run = [model_1, model_2, model_3, model_4, model_5]
+
+    models_performance = {}
+
+    for i, model in enumerate(models_to_run):   
+        print(f"Running model {i+1}")
+        loss, accuracy = run_model(model(train_X), train_X, train_Y, cv_X, cv_Y, test_X, test_Y, plot=False, save=False, model_name=f"model_{i+1}_{spectogram_type}")
+        models_performance[f"model_{i+1}_{spectogram_type}"] = {"loss": loss, "accuracy": accuracy}
+
+    return models_performance
 
 
     
         
 if __name__ == "__main__":
-    argParser = argparse.ArgumentParser(description="Train a model")
-    argParser.add_argument("--spectogram_type", type=str, help="Type of spectogram to use", required=True,  choices=["mfcc","melspectrogram","chroma_stft"])
-    args = argParser.parse_args()
-    run(args.spectogram_type)
+    #argParser = argparse.ArgumentParser(description="Train a model")
+    #argParser.add_argument("--spectogram_type", type=str, help="Type of spectogram to use", required=True,  choices=["mfcc","melspectrogram","chroma_stft"])
+    #args = argParser.parse_args()
+    #run(args.spectogram_type)
+
+    models_performance = {}
+
+    for spectogram_type in ["mfcc","melspectrogram","chroma_stft"]:
+        models_performance[spectogram_type] = run(spectogram_type)
+
+
+    # with open(f'data/models/{datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")}_models_performance.json', 'w') as fp:
+    #     json.dump(models_performance, fp, indent=4)
+        
+    with open(f'data/models/models_performance.json', 'w') as fp:
+        json.dump(models_performance, fp, indent=4)
+
     

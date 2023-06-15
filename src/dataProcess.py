@@ -49,8 +49,9 @@ def process_data(spectogram_type="mfcc",ptdb=False):
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Process audio files")
-    argParser.add_argument("--spec", type=str, default="mfcc", help="Type of spectogram to use", choices=["mfcc","melspectrogram","chroma_stft"])
-    argparse.add_argument("--ptdb", type=bool, default=False, help="Whether to use power to db or not")
+    argParser.add_argument("--spectogram_type", type=str, help="Type of spectogram to use", required=True)
+    argParser.add_argument("--power_to_db", type=bool, help="Whether to convert to db or not", required=True)
     args = argParser.parse_args()
-    process_data(args.spec, args.ptdb)
+    process_data(args.spectogram_type,args.power_to_db)
+    
 

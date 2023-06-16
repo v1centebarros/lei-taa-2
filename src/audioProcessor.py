@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import librosa.display
 import logging
 import soundfile as sf
+import seaborn as sns
 from collections import namedtuple
 
 Audio = namedtuple("Audio", ["sample", "label"])
@@ -141,6 +142,34 @@ class AudioProcessor:
 
         return padded_audio, longest_audio
         
+    
+    def show_length_distribution(self,signals):
+        plt.rcParams["figure.titleweight"] = 'bold' 
+        plt.rcParams["figure.titlesize"] = 'large'
+        plt.rcParams['figure.dpi'] = 120
+        sampel_times = [len(x)/self.sample_rate for x in signals]
+
+
+        f, (ax_box, ax_hist) = plt.subplots(2, sharex=True, gridspec_kw={"height_ratios": (.20, .80)})
+
+        # Add a graph in each part
+        sns.boxplot(x = sampel_times, ax=ax_box, linewidth = 0.9, color=  '#9af772')
+        sns.histplot(x = sampel_times, ax=ax_hist, bins = 'fd', kde = True)
+
+        # Remove x axis name for the boxplot
+        ax_box.set(xlabel='')
+
+
+        title = 'Audio signal lengths'
+        x_label = 'duration (seconds)'
+        y_label = 'count'
+
+        plt.suptitle(title)
+        ax_hist.set_xlabel(x_label)
+        ax_hist.set_ylabel(y_label)
+        plt.show()
+
+        return sampel_times
 
     
     

@@ -93,7 +93,7 @@ def run(spectogram_type="mfcc"):
 
     for i, model in enumerate(models_to_run):   
         print(f"Running model {i+1}")
-        loss, accuracy = run_model(model(train_X), train_X, train_Y, cv_X, cv_Y, test_X, test_Y, plot=False, save=False, model_name=f"model_{i+1}_{spectogram_type}")
+        loss, accuracy = run_model(model(train_X), train_X, train_Y, cv_X, cv_Y, test_X, test_Y, plot=False, save=True, model_name=f"model_{i+1}_{spectogram_type}")
         models_performance[f"model_{i+1}_{spectogram_type}"] = {"loss": loss, "accuracy": accuracy}
 
     return models_performance

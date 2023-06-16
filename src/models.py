@@ -125,3 +125,21 @@ def model_5(train_X):
     model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
+
+def model_6(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Resizing(32, 32), 
+        Conv2D(32, 3, activation='relu'),
+        MaxPooling2D(),
+        #Conv2D(64, 3, activation='relu'),
+        #MaxPooling2D(),
+        Dropout(0.5),
+        Flatten(),
+        Dense(128, activation='relu'),
+        Dense(10),
+    ])
+    
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model

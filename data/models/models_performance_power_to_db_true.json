@@ -1,0 +1,68 @@
+{
+    "mfcc": {
+        "model_1_mfcc": {
+            "loss": 0.690951406955719,
+            "accuracy": 0.7816666960716248
+        },
+        "model_2_mfcc": {
+            "loss": 0.8728460669517517,
+            "accuracy": 0.7183333039283752
+        },
+        "model_3_mfcc": {
+            "loss": 0.4638654589653015,
+            "accuracy": 0.85916668176651
+        },
+        "model_4_mfcc": {
+            "loss": 0.4938022792339325,
+            "accuracy": 0.824999988079071
+        },
+        "model_5_mfcc": {
+            "loss": 0.5072011947631836,
+            "accuracy": 0.8316666483879089
+        }
+    },
+    "melspectrogram": {
+        "model_1_melspectrogram": {
+            "loss": 0.49139654636383057,
+            "accuracy": 0.8349999785423279
+        },
+        "model_2_melspectrogram": {
+            "loss": 0.49192556738853455,
+            "accuracy": 0.8333333134651184
+        },
+        "model_3_melspectrogram": {
+            "loss": 0.31467950344085693,
+            "accuracy": 0.9041666388511658
+        },
+        "model_4_melspectrogram": {
+            "loss": 0.22365747392177582,
+            "accuracy": 0.9383333325386047
+        },
+        "model_5_melspectrogram": {
+            "loss": 0.19513064622879028,
+            "accuracy": 0.9466666579246521
+        }
+    },
+    "chroma_stft": {
+        "model_1_chroma_stft": {
+            "loss": 2.1035430431365967,
+            "accuracy": 0.30250000953674316
+        },
+        "model_2_chroma_stft": {
+            "loss": 2.0552923679351807,
+            "accuracy": 0.2783333361148834
+        },
+        "model_3_chroma_stft": {
+            "loss": 1.2678054571151733,
+            "accuracy": 0.5866666436195374
+        },
+        "model_4_chroma_stft": {
+            "loss": 1.1022627353668213,
+            "accuracy": 0.6291666626930237
+        },
+        "model_5_chroma_stft": {
+            "loss": 1.4015737771987915,
+            "accuracy": 0.5024999976158142
+        }
+    }
+}

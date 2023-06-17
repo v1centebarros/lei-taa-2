@@ -1,6 +1,7 @@
 from keras import Sequential, Input
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Resizing, BatchNormalization
 from keras.optimizers import Adam,RMSprop
+from keras.models import Model
 from keras.losses import SparseCategoricalCrossentropy
 
 
@@ -139,6 +140,19 @@ def model_6(train_X):
         Dense(128, activation='relu'),
         Dense(10),
     ])
+    
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+def dnn(train_X):
+    X_input= Input(shape=(*train_X[0].shape, 1)),
+    X = Flatten()(train_X)
+    X = Dense(1, activation='sigmoid', name='fc')(X)
+
+    # Create model.
+
+    model = Model(inputs = X_input, outputs = X, name='HappyModel')
     
     model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 

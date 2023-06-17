@@ -34,7 +34,8 @@ def process_data(spectogram_type="mfcc",ptdb=False):
 
     logger.info("Splitting data")
     train, test = train_test_split(sanitized_audio_data, test_size=0.4, random_state=42,stratify=[audio.label for audio in sanitized_audio_data])
-    train, cv = train_test_split(train, test_size=0.5, random_state=42,stratify=[audio.label for audio in train])
+    cv, test = train_test_split(test, test_size=0.5, random_state=42,stratify=[audio.label for audio in test])
+
 
     # Save the data in the respective folders
     logger.info("Saving data")

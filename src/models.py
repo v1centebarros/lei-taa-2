@@ -143,3 +143,16 @@ def model_6(train_X):
     model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 
     return model
+
+def dnn(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(128, activation='relu'),
+        Dense(10),
+    ])
+
+    model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+        

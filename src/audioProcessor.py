@@ -58,7 +58,14 @@ class AudioProcessor:
         logger.info("Plotting waveform")
         plt.figure(figsize=(10, 4))
         librosa.display.waveshow(waveform, sr=self.sample_rate)
-        plt.show()
+        plt.xlabel('Time (s)')
+        plt.ylabel('Amplitude')
+        plt.title('Waveform')
+        plt.tight_layout()
+        plt.savefig('waveform.png')  # Save the waveform plot as an image
+        plt.close()  # Close the plot to free up memory
+        return waveform
+
 
     def load_audio_files(self, audio_folder=None) -> list[Audio]:
         if audio_folder is None:

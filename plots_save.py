@@ -1,5 +1,6 @@
 import librosa
 from matplotlib import pyplot as plt
+import numpy as np
 from src.audioProcessor import AudioProcessor, Audio
 
 data = AudioProcessor()
@@ -35,10 +36,5 @@ data.plot_spectogram(spectogram, "chroma_stft")
 spectogram = data.spectogram(longest_audio,"stft", power_to_db=False)
 data.plot_spectogram(spectogram, "stft")
 
-                     
-# --------------------results models ---------------------------
-
-# load file .h5
-filename = "model_1_chroma_stft.h5"
 
 

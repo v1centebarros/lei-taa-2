@@ -17,6 +17,7 @@ spectogram_func = {
     "melspectrogram": librosa.feature.melspectrogram,
     "mfcc": librosa.feature.mfcc,
     "chroma_stft": librosa.feature.chroma_stft,
+    "stft": librosa.stft,
 }
 
 
@@ -37,7 +38,10 @@ class AudioProcessor:
     def spectogram(self, waveform, spec_func="melspectrogram", sr=8000,power_to_db=False):
         # Convert to spectrogram
         logger.info(f"Converting to {spec_func} spectrogram")
-        spec = spectogram_func[spec_func](y=waveform, sr=sr)
+        if spec_func == "stft":
+            spec = spectogram_func[spec_func](y=waveform)
+        else:
+            spec = spectogram_func[spec_func](y=waveform, sr=sr)
         
         if power_to_db:
             #! Esta linha baixa a accuracy do modelo em mfcc

@@ -156,3 +156,110 @@ def dnn(train_X):
 
     return model
         
+
+# ------------------------------
+
+
+def dnn_1(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(10),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.001), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+def dnn_2(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(10),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.001), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+
+def dnn_3(train_X):
+
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(64),
+        Dense(64),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.001), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+
+def dnn_4(train_X):
+
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(64),
+        Dense(128),
+        Dense(64),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.001), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+
+
+def dnn_5(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(10),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.1), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+def dnn_6(train_X):
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(10),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.1), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+
+def dnn_7(train_X):
+
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(64),
+        Dense(64),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.1), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+
+def dnn_8(train_X):
+
+    model = Sequential([
+        Input(shape=(*train_X[0].shape, 1)),
+        Flatten(),
+        Dense(64),
+        Dense(128),
+        Dense(64),
+    ])
+
+    model.compile(optimizer=Adam(learning_rate=0.1), loss=SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model

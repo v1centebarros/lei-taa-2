@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime
 
-from src.models import model_1,model_2,model_3,model_4, model_5, model_6
+from src.models import model_1,model_2,model_3,model_4, model_5, model_6, dnn, dnn_1, dnn_2, dnn_3, dnn_4, dnn_5, dnn_6,dnn_7,dnn_8
 
 
 
@@ -23,7 +23,7 @@ def load_data(spectogram_type):
 
 
 def train_model(model, train_X, train_Y, cv_X, cv_Y):
-    return model.fit(train_X, train_Y, epochs=25, validation_data=(cv_X, cv_Y))
+    return model.fit(train_X, train_Y, epochs=50, validation_data=(cv_X, cv_Y))
 
 
 
@@ -113,7 +113,7 @@ def run_model(model, train_X, train_Y, cv_X, cv_Y, test_X, test_Y, plot=False, s
     return test_loss, test_acc
 
 def save_model(model, model_name):
-    model.save(f"data/models/{model_name}.h5")
+    model.save(f"data/models_dnn/{model_name}.h5")
 
 
 
@@ -122,7 +122,7 @@ def run(spectogram_type="mfcc"):
 
     train_X, train_Y, cv_X, cv_Y, test_X, test_Y = load_data(spectogram_type)
 
-    models_to_run = [model_1, model_2, model_3, model_4, model_5, model_6]
+    models_to_run = [dnn_1, dnn_2, dnn_3, dnn_4, dnn_5, dnn_6,dnn_7,dnn_8]
 
     models_performance = {}
 
@@ -144,14 +144,14 @@ if __name__ == "__main__":
 
     models_performance = {}
 
-    for spectogram_type in ["mfcc","melspectrogram","chroma_stft"]:
+    for spectogram_type in ["mfcc","melspectrogram","chroma_stft","stft"]:
         models_performance[spectogram_type] = run(spectogram_type)
 
 
     # with open(f'data/models/{datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")}_models_performance.json', 'w') as fp:
     #     json.dump(models_performance, fp, indent=4)
         
-    with open(f'data/models/models_performance.json', 'w') as fp:
-        json.dump(models_performance, fp, indent=4)
+    with open(f'data/models_dnn/models_performance_{spectogram_type}.json', 'w') as fp:
+        json.dump(models_performance, fp, indent=2)
 
     

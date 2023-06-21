@@ -7,6 +7,8 @@ import logging
 import soundfile as sf
 import seaborn as sns
 from collections import namedtuple
+from os.path import join
+from scipy.io import wavfile
 
 Audio = namedtuple("Audio", ["sample", "label"])
 
@@ -17,6 +19,7 @@ spectogram_func = {
     "melspectrogram": librosa.feature.melspectrogram,
     "mfcc": librosa.feature.mfcc,
     "chroma_stft": librosa.feature.chroma_stft,
+    "stft": librosa.stft,
 }
 
 
@@ -34,37 +37,57 @@ class AudioProcessor:
         self.spectograms_folder = spectograms_folder
         self.audio_files:list[Audio] = self.load_audio_files()
 
-    def spectogram(self, waveform, spec_func="melspectrogram", sr=8000,power_to_db=False):
+    def spectogram(self, waveform = None, spec_func="mfcc", sr=8000,power_to_db=False):
+
+        if waveform is None:
+            logger.info("No waveform passed, using the longest audio")
+            waveform = self.get_longest_audio()
+
         # Convert to spectrogram
         logger.info(f"Converting to {spec_func} spectrogram")
         spec = spectogram_func[spec_func](y=waveform, sr=sr)
         
         if power_to_db:
-            #! Esta linha baixa a accuracy do modelo em mfcc
             return librosa.power_to_db(spec, ref=np.max)
         
         return spec
-
-    # TODO: Refactor this method to handle different name
-    def plot_spectogram(self, spec):
+    
+    def plot_spectogram(self, spec, title="Mel spectrogram"):
+        logger.info("Plotting Spectogram")
         plt.figure(figsize=(10, 4))
         librosa.display.specshow(spec, y_axis="mel", x_axis="time",sr=self.sample_rate)
         plt.colorbar(format="%+2.0f dB")
-        plt.title("Mel spectrogram")
+        plt.title(title)
         plt.tight_layout()
-        plt.show()
+        filename = title.replace(" ", '')
+        plt.savefig(join(self.output_folder, filename + ".png"))
+        plt.close()
 
-    def plot_waveform(self, waveform):
+    def spectogram_stft(self, waveform = None, spec_func="stft", sr=8000,power_to_db=False):
+            
+        # Padding for files with less than 16000 samples
+        if waveform is None:
+            logger.info("No waveform passed, using the longest audio")
+            waveform = self.get_longest_audio()
+
+        # Convert to spectrogram
+        spec = librosa.stft(waveform)
+        # Log-scale frequency axis so that both positive and negative frequencies can be clearly see
+        spec_db = librosa.amplitude_to_db(np.abs(spec))
+
+        return spec_db
+
+    def plot_waveform(self, waveform, title="Waveform"):
         logger.info("Plotting waveform")
         plt.figure(figsize=(10, 4))
         librosa.display.waveshow(waveform, sr=self.sample_rate)
         plt.xlabel('Time (s)')
         plt.ylabel('Amplitude')
-        plt.title('Waveform')
+        plt.title(title)
         plt.tight_layout()
-        plt.savefig('waveform.png')  # Save the waveform plot as an image
-        plt.close()  # Close the plot to free up memory
-        return waveform
+        filename = title.replace(" ", '')
+        plt.savefig(join(self.output_folder, filename + ".png"))
+        plt.close()
 
 
     def load_audio_files(self, audio_folder=None) -> list[Audio]:
@@ -83,9 +106,9 @@ class AudioProcessor:
         audio, _ = librosa.effects.trim(sample, top_db=top_db)
         return audio
 
-    def padding(self, sample:Audio, length):
+    def padding(self, sample, length):
         logger.info("Padding the sample")
-        return librosa.util.fix_length(sample.sample,size=length)
+        return librosa.util.fix_length(sample,size=length)
 
     def add_noise(self, sample, noise_factor=0.05):
         logger.info("Adding noise")
@@ -145,7 +168,7 @@ class AudioProcessor:
         logger.info(f"Longest audio has {len(longest_audio)} samples")
 
         logger.info("Padding audio")
-        padded_audio = [Audio(self.padding(sample, len(longest_audio)),sample.label) for sample in trimmed_audio]
+        padded_audio = [Audio(self.padding(sample.sample, len(longest_audio)),sample.label) for sample in trimmed_audio]
 
         return padded_audio, longest_audio
         

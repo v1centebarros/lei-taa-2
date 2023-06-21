@@ -45,12 +45,19 @@ class AudioProcessor:
 
         # Convert to spectrogram
         logger.info(f"Converting to {spec_func} spectrogram")
-        spec = spectogram_func[spec_func](y=waveform, sr=sr)
         
-        if power_to_db:
-            return librosa.power_to_db(spec, ref=np.max)
+        if  spec_func == "stft":
+            # Convert to spectrogram
+            spec = librosa.stft(waveform)
+            # Log-scale frequency axis so that both positive and negative frequencies can be clearly see
+            spec_db = librosa.amplitude_to_db(np.abs(spec))
+            return spec_db
+        else :
+            spec = spectogram_func[spec_func](y=waveform, sr=sr)
+            if power_to_db:
+                return librosa.power_to_db(spec, ref=np.max)
         
-        return spec
+            return spec
     
     def plot_spectogram(self, spec, title="Mel spectrogram"):
         logger.info("Plotting Spectogram")
@@ -62,7 +69,7 @@ class AudioProcessor:
         filename = title.replace(" ", '')
         plt.savefig(join(self.output_folder, filename + ".png"))
         plt.close()
-
+        
     def plot_waveform(self, waveform, title="Waveform"):
         logger.info("Plotting waveform")
         plt.figure(figsize=(10, 4))

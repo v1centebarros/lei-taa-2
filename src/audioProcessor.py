@@ -63,20 +63,6 @@ class AudioProcessor:
         plt.savefig(join(self.output_folder, filename + ".png"))
         plt.close()
 
-    def spectogram_stft(self, waveform = None, spec_func="stft", sr=8000,power_to_db=False):
-            
-        # Padding for files with less than 16000 samples
-        if waveform is None:
-            logger.info("No waveform passed, using the longest audio")
-            waveform = self.get_longest_audio()
-
-        # Convert to spectrogram
-        spec = librosa.stft(waveform)
-        # Log-scale frequency axis so that both positive and negative frequencies can be clearly see
-        spec_db = librosa.amplitude_to_db(np.abs(spec))
-
-        return spec_db
-
     def plot_waveform(self, waveform, title="Waveform"):
         logger.info("Plotting waveform")
         plt.figure(figsize=(10, 4))
@@ -177,6 +163,7 @@ class AudioProcessor:
         plt.rcParams["figure.titleweight"] = 'bold' 
         plt.rcParams["figure.titlesize"] = 'large'
         plt.rcParams['figure.dpi'] = 120
+        plt.style.use('fivethirtyeight')
         sampel_times = [len(x)/self.sample_rate for x in signals]
 
 

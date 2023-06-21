@@ -33,7 +33,13 @@ data.plot_spectogram(spectogram, "chroma_stft")
 
 # stft
 longest_audio = data.remove_silence(longest_audio)
-spectogram = data.spectogram_stft(longest_audio,"stft", power_to_db=True)
+spectogram = data.spectogram(longest_audio,"stft", power_to_db=True)
 data.plot_spectogram(spectogram, "stft")
 
                      
+# --------------------results models ---------------------------
+
+# load file .h5
+filename = "model_1_chroma_stft.h5"
+
+

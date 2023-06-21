@@ -1,0 +1,36 @@
+{
+  "melspectrogram": {
+    "model_1_melspectrogram": {
+      "loss": 2.3025853633880615,
+      "accuracy": 0.10000000149011612
+    },
+    "model_2_melspectrogram": {
+      "loss": 2.3025853633880615,
+      "accuracy": 0.10000000149011612
+    },
+    "model_3_melspectrogram": {
+      "loss": 1.6488666534423828,
+      "accuracy": 0.4633333384990692
+    },
+    "model_4_melspectrogram": {
+      "loss": 2.458392858505249,
+      "accuracy": 0.22833333909511566
+    },
+    "model_5_melspectrogram": {
+      "loss": 2.3025853633880615,
+      "accuracy": 0.10000000149011612
+    },
+    "model_6_melspectrogram": {
+      "loss": 2.3025853633880615,
+      "accuracy": 0.10000000149011612
+    },
+    "model_7_melspectrogram": {
+      "loss": 3.189765214920044,
+      "accuracy": 0.10000000149011612
+    },
+    "model_8_melspectrogram": {
+      "loss": 2.329298496246338,
+      "accuracy": 0.10000000149011612
+    }
+  }
+}

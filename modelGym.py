@@ -26,7 +26,6 @@ def train_model(model, train_X, train_Y, cv_X, cv_Y):
     return model.fit(train_X, train_Y, epochs=50, validation_data=(cv_X, cv_Y))
 
 
-
 def plot_accuracy_loss(history):
     metrics = history.history
     fig, ax = plt.subplots(1, 2)
